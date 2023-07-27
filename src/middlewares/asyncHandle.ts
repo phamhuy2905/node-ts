@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 
-interface CustomRequest<T> extends Request {
-    data: T;
+interface CustomRequest extends Request {
+    [key: string]: string | number | boolean | any;
 }
 
 // type RequestHandlePromise = <T>(req: CustomRequest<T>, res: Response, next: NextFunction) => Promise<any>;

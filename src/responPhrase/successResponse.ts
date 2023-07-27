@@ -49,7 +49,4 @@ class CREATED extends OK {
     }
 }
 
-export = {
-    OK,
-    CREATED,
-};
+export { OK, CREATED };

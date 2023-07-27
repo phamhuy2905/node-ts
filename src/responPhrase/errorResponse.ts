@@ -32,4 +32,10 @@ class UnauthorizedError extends BadRequestError {
     }
 }
 
-export { BadRequestError, ForbiddenError, ConflictError, UnauthorizedError, UnprocessEntityError };
+class NotFoundError extends BadRequestError {
+    constructor(message: string = reasonPhrase.NOT_FOUND, status: number = statusCode.NOT_FOUND) {
+        super(message, status);
+    }
+}
+
+export { BadRequestError, ForbiddenError, ConflictError, UnauthorizedError, UnprocessEntityError, NotFoundError };

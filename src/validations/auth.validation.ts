@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { emailRegex } from "~/helpers/regex";
+import { customMessage } from "./custom.validation";
 
 interface AuthRegister {
     email: string;
@@ -15,6 +16,7 @@ interface AuthLogin {
 
 const authRegister = Joi.object<AuthRegister>({
     email: Joi.string().required().regex(emailRegex),
+    // .error((error) => customMessage(error, { fieldName: "email" })),
     full_name: Joi.string().required().min(3),
     avatar: Joi.string().allow(null),
     password: Joi.string().required().min(8),

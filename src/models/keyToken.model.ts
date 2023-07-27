@@ -1,11 +1,11 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose, { ObjectId, Types } from "mongoose";
 const Schema = mongoose.Schema;
 const model: { NAME_COLLECTION: string } = {
-    NAME_COLLECTION: "KetToken",
+    NAME_COLLECTION: "KeyToken",
 };
 
-interface IKeyToken {
-    user_id: ObjectId;
+export interface IKeyToken {
+    user_id: mongoose.SchemaDefinitionProperty<Types.ObjectId> | undefined;
     public_key: string;
     private_key: string;
     refreshToken_already_used: string[];
@@ -17,7 +17,7 @@ const schema = new Schema<IKeyToken>(
             type: mongoose.Types.ObjectId,
             required: true,
             validate: {
-                validator: async (val: ObjectId) => {
+                validator: async (val: Types.ObjectId) => {
                     const foundUser = await mongoose.models.User.findById(val).lean();
                     return foundUser ? true : false;
                 },

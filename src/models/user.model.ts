@@ -43,7 +43,11 @@ const schema = new Schema<User, UserModel, UserMethod>(
         },
         avatar: {
             type: String,
-            required: true,
+        },
+        role: {
+            type: String,
+            enum: ["0001", "0002", "0003"],
+            default: "0003",
         },
     },
     { timestamps: true }
@@ -52,15 +56,8 @@ const schema = new Schema<User, UserModel, UserMethod>(
 const User = mongoose.model(model.NAME_COLLECTION, schema);
 export type UserType = InferSchemaType<typeof schema>;
 
-schema.pre("save", async function (next) {
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(this.password, salt);
-    this.password = hashPassword;
-    next();
-});
-
 schema.methods.comparePassword = function ({ password, passwordHash }) {
-    const isExactly: boolean = bcrypt.compareSync(password, password);
+    const isExactly: boolean = bcrypt.compareSync(password, passwordHash);
     return isExactly;
 };
 export default User;
