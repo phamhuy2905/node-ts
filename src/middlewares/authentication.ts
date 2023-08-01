@@ -17,7 +17,6 @@ const checkValidationToken: ValidationToken = (req) => {
 
     const accessToken = headerAccessToken.split(" ")[1];
     if (!accessToken) throw new UnauthorizedError("Vui lòng đăng nhập để tiếp tục!");
-
     if (!req.headers[HEADERS["x-id-key"]]) throw new UnauthorizedError("Vui lòng đăng nhập để tiếp tục!");
 
     const refreshToken = req.cookies.refreshToken;
@@ -45,7 +44,7 @@ const authentication = asyncHandle(async (req, res, next) => {
         req.keyToken = foundKeyToken;
         req.refreshTokenOld = refreshToken;
         req.user_id = user_id;
-        req.user = omitLodahs(foundUser, ["password", "__v"]);
+        req.user = foundUser;
         next();
     });
 });
@@ -67,7 +66,7 @@ const authenticationV2 = asyncHandle(async (req, res, next) => {
         req.keyToken = foundKeyToken;
         req.refreshTokenOld = refreshToken;
         req.user_id = user_id;
-        req.user = omitLodahs(foundUser, ["password", "__v"]);
+        req.user = foundUser;
         next();
     });
 });

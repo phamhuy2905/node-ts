@@ -23,5 +23,6 @@ app.use(
     })
 );
 app.use("/", router);
+
 app.use(globalMiddleware);
 app.use("/", routerNotFound);

@@ -10,7 +10,8 @@ const storage = multer.diskStorage({
     filename(req, file, callback) {
         const { originalname, fieldname } = file;
         const ext = path.extname(originalname);
-        callback(null, `${fieldname}-${Date.now()}${ext}`);
+        const fileName = `${fieldname}-${Date.now()}${ext}`;
+        callback(null, fileName);
     },
 });
 
@@ -19,7 +20,8 @@ const fileFilter = (req: Request, file: Express.Multer.File, callback: multer.Fi
     if (!originalname.match(/\.(png|jpg|jpeg)$/i)) {
         return callback(new BadRequestError("File không hợp lệ"));
     }
-    callback(null, true);
+    callback(null, false);
+    console.log(file);
 };
 
 const upload = multer({ storage, fileFilter });

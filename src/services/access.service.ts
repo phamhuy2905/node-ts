@@ -6,6 +6,8 @@ import { comparePassword, createSecret, createTokenPair, generateCookie, hashPas
 import convertObjectId from "~/utils/convertObjectId";
 import { omitLodahs, pickLodash } from "~/utils/lodash";
 import { HEADERS } from "~/constants";
+import { get, setEx } from "~/helpers/redis.helper";
+import generateOtp from "~/utils/generateOtp";
 class AccessService {
     static async register(req: Request) {
         const { email, password, full_name } = req.body;
@@ -82,9 +84,54 @@ class AccessService {
         generateCookie(res, "refreshToken", refreshToken);
         res.setHeader(HEADERS["x-id-key"], user_id!);
         return {
-            user,
+            user: omitLodahs(user, ["password", "__v"]),
             accessToken,
         };
+    }
+
+    static async profile(req: Request) {
+        const user = await User.findById(req.user_id).lean();
+        return omitLodahs(user, ["password", "__v"]);
+    }
+
+    static async updateProfile(req: Request) {
+        const file = req.file;
+        let update = req.body;
+        if (file) {
+            update = { ...req.body, avatar: file };
+        }
+
+        const newProfile = await User.findByIdAndUpdate(req.user_id, update, { new: true }).lean();
+        return omitLodahs(newProfile, ["password", "__v"]);
+    }
+
+    static async updatePassword(req: Request) {
+        const isExactly = await comparePassword(req.body.password, req.user?.password!);
+        if (!isExactly) throw new BadRequestError("Mật khẩu không chính xác!");
+
+        const hash = await hashPassword(req.body.new_password);
+        const user = await User.findByIdAndUpdate(req.user_id, { password: hash }, { new: true }).lean();
+        return omitLodahs(user, ["password", "__v"]);
+    }
+
+    static async forgotPassword(req: Request) {
+        const { email } = req.body;
+        const user = await User.findOne({ email: email }).lean();
+        if (!user) throw new BadRequestError("Email không hợp lệ!");
+
+        await setEx(email, 30, generateOtp().toString());
+        return true;
+    }
+
+    static async verifyForgotPassword(req: Request) {
+        const { otp, password, email } = req.body;
+        const codeVerify = await get(email);
+        if (!codeVerify) throw new BadRequestError("Mã otp hết hiệu lực, vui lòng thử lại!");
+        if (+otp !== +codeVerify) throw new BadRequestError("Mã otp không chính xác!");
+
+        const hash = await hashPassword(password);
+        const user = await User.findOneAndUpdate({ email }, { password: hash }, { new: true });
+        return omitLodahs(user, ["password", "__v"]);
     }
 }
 
