@@ -10,6 +10,7 @@ import app from "./server";
 import globalMiddleware from "./middlewares/globalMiddlware";
 import routerNotFound from "./middlewares/routerNotfound";
 import router from "./routes";
+import upload from "./middlewares/upload";
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -23,6 +24,10 @@ app.use(
     })
 );
 app.use("/", router);
+app.use("/", (req, res, next) => {
+    req.images = [];
+    next();
+});
 
 app.use(globalMiddleware);
 app.use("/", routerNotFound);

@@ -95,11 +95,11 @@ class AccessService {
     }
 
     static async updateProfile(req: Request) {
-        const file = req.file;
-        let update = req.body;
-        if (file) {
-            update = { ...req.body, avatar: file };
-        }
+        const { day, month, year } = req.body;
+        let birthday: string | null = null;
+        if (day && month && year) birthday = `${day}-${month}-${year}`;
+
+        const update = { ...req.body, birthday };
 
         const newProfile = await User.findByIdAndUpdate(req.user_id, update, { new: true }).lean();
         return omitLodahs(newProfile, ["password", "__v"]);

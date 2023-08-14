@@ -12,6 +12,8 @@ declare global {
                   })
                 | null;
             user?: any;
+            image: string;
+            images: string[];
         }
     }
 }

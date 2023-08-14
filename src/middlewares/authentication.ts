@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import { HEADERS } from "~/constants";
 import { UnauthorizedError } from "~/responPhrase/errorResponse";
-import { foundKeyTokenByUserId } from "~/repos/keyToken.repo";
+import { foundKeyTokenByUserId } from "~/models/repositories/keyToken.repo";
 import asyncHandle from "./asyncHandle";
 import { Request } from "express";
-import { findUserById } from "~/repos/auth.repo";
+import { findUserById } from "~/models/repositories/auth.repo";
 import { omitLodahs } from "~/utils/lodash";
 
 type ValidationToken = (req: Request) => { accessToken: string; refreshToken: string; user_id: string };

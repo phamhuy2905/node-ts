@@ -11,7 +11,10 @@ interface User {
     full_name: string;
     password: string;
     avatar: string | null;
+    phone_number: string | null;
+    birthday: string;
     role: "0001" | "0002" | "0003";
+    gender: "Male" | "Feelmale" | "Unknow";
 }
 interface UserMethod {
     comparePassword({ password, passwordHash }: { password: string; passwordHash: string }): boolean;
@@ -42,6 +45,16 @@ const schema = new Schema<User, UserModel, UserMethod>(
             min: 8,
         },
         avatar: {
+            type: String,
+        },
+        phone_number: {
+            type: String,
+        },
+        gender: {
+            type: String,
+            default: "Male",
+        },
+        birthday: {
             type: String,
         },
         role: {

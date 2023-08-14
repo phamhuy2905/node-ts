@@ -6,15 +6,24 @@ import {
     authLogin,
     authRegister,
     authUpdatePassword,
+    authUpdateProfile,
     authVerifyForgotPassword,
 } from "~/validations/auth.validation";
 import { authentication, authenticationV2 } from "~/middlewares/authentication";
+import upload from "~/middlewares/upload";
 const router = express.Router();
 
 router.post("/register", validator(authRegister), AccessController.register);
 router.post("/login", validator(authLogin), AccessController.login);
 router.post("/logout", authentication, AccessController.logout);
 router.patch("/updatePassword", authentication, validator(authUpdatePassword), AccessController.updatePassword);
+router.patch(
+    "/updateProfile",
+    authentication,
+    validator(authUpdateProfile),
+    upload.single("avatar"),
+    AccessController.updateProfile
+);
 router.post("/forgotPassword", authentication, validator(authForgotPassword), AccessController.forgotPassword);
 router.patch(
     "/verifyForgotPassword",

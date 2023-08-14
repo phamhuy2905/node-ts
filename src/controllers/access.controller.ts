@@ -18,6 +18,9 @@ class AccessController {
     static updatePassword = asyncHandle(async (req, res, _next) => {
         return new CREATED({ data: await AccessService.updatePassword(req) }).send(res);
     });
+    static updateProfile = asyncHandle(async (req, res, _next) => {
+        return new CREATED({ data: await AccessService.updateProfile(req) }).send(res);
+    });
     static forgotPassword = asyncHandle(async (req, res, _next) => {
         return new CREATED({ data: await AccessService.forgotPassword(req) }).send(res);
     });

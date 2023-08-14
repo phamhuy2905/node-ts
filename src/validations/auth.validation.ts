@@ -18,6 +18,15 @@ interface AuthUpdatePassword {
     new_password: string;
     password_confirm: string;
 }
+interface AuthUpdateProfile {
+    avatar: string;
+    phone_number: string;
+    day: number;
+    month: number;
+    year: number;
+    gender: "Male" | "Feelmale" | "Unknow";
+}
+
 interface AuthForgotPassword {
     email: string;
 }
@@ -45,6 +54,14 @@ const authUpdatePassword = Joi.object<AuthUpdatePassword>({
     new_password: Joi.string().required().min(8),
     password_confirm: Joi.string().valid(Joi.ref("new_password")).required(),
 });
+const authUpdateProfile = Joi.object<AuthUpdateProfile>({
+    avatar: Joi.string().allow(null),
+    phone_number: Joi.string().allow(null),
+    day: Joi.number().allow(null),
+    month: Joi.number().allow(null),
+    year: Joi.number().allow(null),
+    gender: Joi.string().valid("Male", "Feelmale", "Unknow").default("Unknow"),
+});
 const authForgotPassword = Joi.object<AuthForgotPassword>({
     email: Joi.string().required().regex(emailRegex),
 });
@@ -54,4 +71,4 @@ const authVerifyForgotPassword = Joi.object<VerifyForgotPassword>({
     password: Joi.string().required().min(8),
 });
 
-export { authRegister, authLogin, authUpdatePassword, authForgotPassword, authVerifyForgotPassword };
+export { authRegister, authLogin, authUpdatePassword, authForgotPassword, authVerifyForgotPassword, authUpdateProfile };
