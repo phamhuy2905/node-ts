@@ -1,6 +1,5 @@
 import Joi from "joi";
 import { emailRegex } from "~/helpers/regex";
-import { customMessage } from "./custom.validation";
 
 interface AuthRegister {
     email: string;

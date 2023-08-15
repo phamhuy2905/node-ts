@@ -10,7 +10,8 @@ import app from "./server";
 import globalMiddleware from "./middlewares/globalMiddlware";
 import routerNotFound from "./middlewares/routerNotfound";
 import router from "./routes";
-import upload from "./middlewares/upload";
+import registerFactory from "./factories";
+registerFactory();
 
 app.use(express.json());
 app.use(morgan("dev"));
