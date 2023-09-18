@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
 import { HEADERS } from "~/constants";
-import { UnauthorizedError } from "~/responPhrase/errorResponse";
+import { ForbiddenError, UnauthorizedError } from "~/responPhrase/errorResponse";
 import { foundKeyTokenByUserId } from "~/models/repositories/keyToken.repo";
 import asyncHandle from "./asyncHandle";
 import { Request } from "express";
 import { findUserById } from "~/models/repositories/auth.repo";
 import { omitLodahs } from "~/utils/lodash";
+import { Next, Req, Res, Role } from "~/types";
 
 type ValidationToken = (req: Request) => { accessToken: string; refreshToken: string; user_id: string };
 
@@ -71,4 +72,13 @@ const authenticationV2 = asyncHandle(async (req, res, next) => {
     });
 });
 
-export { authentication, authenticationV2 };
+const checkRole = (role: Role[]) => {
+    return (req: Req, res: Res, next: Next) => {
+        if (!role.includes(req.user.role)) {
+            throw new ForbiddenError();
+        }
+        next();
+    };
+};
+
+export { authentication, authenticationV2, checkRole };

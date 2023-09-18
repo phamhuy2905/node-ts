@@ -77,26 +77,41 @@ const createFuritune = Joi.object<ElectronicType>({
 
 const createProduct = Joi.object<CreateProduct>({
     product_name: Joi.string().min(3).required(),
-    product_type: Joi.string().valid("Electronic", "Clothing", "Furtumine").required(),
+    product_type: Joi.string().valid("Electronic", "Clothing", "Furniture").required(),
     product_thumbnail: Joi.string().required(),
     product_multiple_thumbnail: Joi.array().items(Joi.string()).min(3).required(),
     product_price: Joi.number().min(0).required(),
     product_short_desc: Joi.string().min(30).required(),
     product_long_desc: Joi.string().allow(null),
-    product_attribute: Joi.alternatives()
-        .when("productType", {
-            is: "Clothing",
-            then: createClothing,
-        })
-        .when("productType", {
-            is: "Electronic",
-            then: createElectronic,
-        })
-        .when("productType", {
-            is: "Furniture",
-            then: createFuritune,
-        })
-        .default(Joi.forbidden()),
-});
-
+})
+    .when(
+        Joi.object({
+            product_type: Joi.string().valid("Clothing").required(),
+        }).unknown(),
+        {
+            then: Joi.object({
+                product_attributes: createClothing,
+            }),
+        }
+    )
+    .when(
+        Joi.object({
+            product_type: Joi.string().valid("Electronic").required(),
+        }).unknown(),
+        {
+            then: Joi.object({
+                product_attributes: createElectronic,
+            }),
+        }
+    )
+    .when(
+        Joi.object({
+            product_type: Joi.string().valid("Furniture").required(),
+        }).unknown(),
+        {
+            then: Joi.object({
+                product_attributes: createFuritune,
+            }),
+        }
+    );
 export { createProduct };

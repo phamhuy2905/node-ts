@@ -1,3 +1,5 @@
+import registerFactory from "./factories";
+registerFactory();
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -10,10 +12,10 @@ import app from "./server";
 import globalMiddleware from "./middlewares/globalMiddlware";
 import routerNotFound from "./middlewares/routerNotfound";
 import router from "./routes";
-import registerFactory from "./factories";
-registerFactory();
 
+app.use("uploads", express.static("./uploads"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
@@ -21,7 +23,8 @@ app.use(cookieParser());
 app.use(
     cors({
         credentials: true,
-        origin: "http://localhost:3000/",
+        origin: "http://localhost:3000",
+        optionsSuccessStatus: 200,
     })
 );
 app.use("/", router);

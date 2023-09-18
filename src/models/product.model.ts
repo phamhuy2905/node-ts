@@ -1,11 +1,17 @@
+import slugify from "slugify";
 import mongoose, { Types } from "mongoose";
 const Schema = mongoose.Schema;
 
-const model: { NAME_COLLECTION: string; CLOTHING_COLLECTION: string; ELECTRONIC: string; FURNITUNE: string } = {
+const model: {
+    NAME_COLLECTION: string;
+    CLOTHING_COLLECTION: string;
+    ELECTRONIC_COLLECTION: string;
+    FURNITUNE_COLLECTION: string;
+} = {
     NAME_COLLECTION: "Product",
     CLOTHING_COLLECTION: "Clothing",
-    ELECTRONIC: "Electronic",
-    FURNITUNE: "Electronic",
+    ELECTRONIC_COLLECTION: "Electronic",
+    FURNITUNE_COLLECTION: "FURNITUNE",
 };
 
 interface ProductType {
@@ -121,6 +127,7 @@ const clothingSchema = new Schema<ClothingType>({
                 v: { type: String },
             },
         ],
+        _id: false,
     },
 });
 const electronicSchema = new Schema<ElectronicType>({
@@ -140,6 +147,7 @@ const electronicSchema = new Schema<ElectronicType>({
                 v: { type: String },
             },
         ],
+        _id: false,
     },
 });
 const furnituneSchema = new Schema<FurnituneType>({
@@ -156,12 +164,21 @@ const furnituneSchema = new Schema<FurnituneType>({
                 v: { type: String },
             },
         ],
+        _id: false,
     },
 });
 
+productSchema.pre("save", function (next) {
+    this.product_slug = slugify(this.product_name, {
+        lower: true,
+        trim: true,
+    });
+    next();
+});
+
 const Product = mongoose.model(model.NAME_COLLECTION, productSchema);
-const Electronic = mongoose.model(model.ELECTRONIC, productSchema);
-const Clothing = mongoose.model(model.CLOTHING_COLLECTION, productSchema);
-const Furnitune = mongoose.model(model.FURNITUNE, productSchema);
+const Electronic = mongoose.model(model.ELECTRONIC_COLLECTION, electronicSchema);
+const Clothing = mongoose.model(model.CLOTHING_COLLECTION, clothingSchema);
+const Furnitune = mongoose.model(model.FURNITUNE_COLLECTION, furnituneSchema);
 
 export { Product, Electronic, Clothing, Furnitune };

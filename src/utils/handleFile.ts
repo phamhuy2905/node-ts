@@ -8,8 +8,9 @@ const handleFile = (fieldName: string, fileName: string, req: Request) => {
             req.body.product_thumbnail = fileName;
             break;
         case "product_multiple_thumbnail":
-            // req.images.push(fileName);
-            req.body.product_multiple_thumbnail = [...req.body.product_multiple_thumbnail, fileName];
+            if (!req.images) req.images = [];
+            req.images.push(fileName);
+            req.body.product_multiple_thumbnail = req.images;
             break;
         default:
             break;

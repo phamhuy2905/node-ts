@@ -14,7 +14,7 @@ const registerFactory = () => {
             const type = capitazileFirstLetter(fileName.split(".")[0]) as ProductType;
             const classRef = type.toLowerCase();
             import(`./${classRef}.factory`).then((factory) => {
-                ProductService.registryProductType(type, factory);
+                ProductService.registryProductType(type, factory.default);
             });
         }
     });

@@ -1,5 +1,5 @@
 import Joi from "joi";
-
+import mongoose from "mongoose";
 const customMessage = (
     errors: Joi.ErrorReport[] = [],
     { fieldName, max, min }: { fieldName: string; max?: number; min?: number }
@@ -30,4 +30,11 @@ const customMessage = (
     return errors;
 };
 
-export { customMessage };
+const requiredId = Joi.object({
+    id: Joi.required().custom((value, helper) => {
+        const isValid = mongoose.Types.ObjectId.isValid(value);
+        if (!isValid) return helper.error("any.invalid");
+    }),
+});
+
+export { customMessage, requiredId };

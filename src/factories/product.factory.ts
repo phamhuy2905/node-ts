@@ -2,6 +2,7 @@ import { Product } from "~/models/product.model";
 import { ObjectId } from "~/types";
 
 interface ProductType {
+    product_shop: ObjectId;
     product_name: string;
     product_sold: number;
     product_type: string;
@@ -10,10 +11,11 @@ interface ProductType {
     product_price: number;
     product_short_desc: string;
     product_long_desc: string;
-    product_attribute: any;
+    product_attributes: any;
 }
 
 class ProductFactory {
+    public product_shop: ObjectId;
     public product_name: string = "";
     public product_slug: string = "";
     public product_sold: number = 0;
@@ -23,9 +25,10 @@ class ProductFactory {
     public product_price: number = 0;
     public product_short_desc: string = "";
     public product_long_desc: string = "";
-    public product_attribute: any = {};
+    public product_attributes: any = {};
 
     constructor({
+        product_shop,
         product_name,
         product_sold,
         product_type,
@@ -34,9 +37,10 @@ class ProductFactory {
         product_price,
         product_short_desc,
         product_long_desc,
-        product_attribute,
+        product_attributes,
     }: ProductType) {
-        (this.product_name = product_name),
+        (this.product_shop = product_shop),
+            (this.product_name = product_name),
             (this.product_sold = product_sold),
             (this.product_type = product_type),
             (this.product_thumbnail = product_thumbnail),
@@ -44,7 +48,7 @@ class ProductFactory {
             (this.product_price = product_price),
             (this.product_short_desc = product_short_desc),
             (this.product_long_desc = product_long_desc),
-            (this.product_attribute = product_attribute);
+            (this.product_attributes = product_attributes);
     }
 
     async createProduct(_id: ObjectId) {

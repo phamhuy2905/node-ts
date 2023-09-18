@@ -24,7 +24,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, callback: multer.Fi
     const ext = path.extname(originalname);
     const fileName = `${fieldname}-${Date.now()}${ext}`;
     handleFile(fieldname, fileName, req);
-    callback(null, true);
+    callback(null, false);
 };
 
 const upload = multer({ storage, fileFilter });
