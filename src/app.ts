@@ -35,3 +35,5 @@ app.use("/", (req, res, next) => {
 
 app.use(globalMiddleware);
 app.use("/", routerNotFound);
+
+console.log(12345);
